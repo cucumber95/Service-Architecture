@@ -1,0 +1,23 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/latest/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(user, "User", "Пользователь трекера задач")
+Container(mainService, "Main Service", "REST API", "API для задач, комментариев, регистрации, аутентификации")
+ContainerDb(userDatabase, "User Database", "Database", "Храним данные для  регистрации пользователей и аутентификации")
+Container(statisticsService, "Statistics Service", "gRPC", "Обработка статистики по задачам")
+ContainerDb(statisticsDatabase, "Statistics Database", "ClickHouse", "Храним статистику по просмотрам и лайкам")
+Container(commentService, "Comment Service", "gRPC", "Обработка задач и комментариев")
+ContainerDb(commentDatabase, "Comment Database", "Database", "Храним коммнетарии")
+Container(broker, "Message Broker", "Kafka/RabbitMQ", "Брокер сообщений")
+
+Rel(user, mainService, "Uses", "HTTPS")
+Rel(mainService, userDatabase, "Reads/Writes")
+Rel(mainService, commentService, "Invokes", "gRPC")
+Rel(mainService, statisticsService, "Invokes", "gRPC")
+Rel(commentService, broker, "Binary protocol over TCP")
+Rel(commentService, commentDatabase, "Reads/Writes")
+Rel(broker, statisticsService, "Binary protocol over TCP")
+Rel(statisticsService, statisticsDatabase, "Reads/Writes")
+@enduml
