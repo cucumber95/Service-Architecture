@@ -1,0 +1,15 @@
+services:
+    database:
+        build: 
+            context: database
+        ports:
+            - 8091:8090
+        volumes:
+            - ./database/database.db:/main_service/database/database.db
+    server:
+        build: 
+            context: server
+        ports:
+            - 8090:8090
+        depends_on:
+            - database
