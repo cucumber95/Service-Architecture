@@ -1,0 +1,72 @@
+syntax = "proto3";
+ 
+service TaskService {
+    rpc CreateTask (CreateTaskRequest) returns (ITask) {}
+    rpc UpdateTask (UpdateTaskRequest) returns (UpdateTaskResponse) {}
+    rpc DeleteTask (DeleteTaskRequest) returns (DeleteTaskResponse) {}
+    rpc GetTask (GetTaskRequest) returns (GetTaskResponse) {}
+    rpc GetTasksList (GetTasksListRequest) returns (GetTasksListResponse) {}
+}
+ 
+enum Statuses {
+    IN_PROGRESS = 0;
+    HIGH_PRIORITY = 1;
+    ON_PAUSE = 2;
+    CLOSED = 3;
+}
+ 
+message ITask {
+    uint64 id = 1;
+    string title = 2;
+    string content = 3;
+    Statuses status = 4;
+}
+ 
+message CreateTaskRequest {
+    string authorLogin = 1;
+    string title = 2;
+    string content = 3;
+    optional Statuses status = 4;
+}
+ 
+message UpdateTaskRequest {
+    uint64 taskId = 1;
+    string authorLogin = 2;
+    optional string title = 3;
+    optional string content = 4;
+    optional Statuses status = 5;
+}
+ 
+message UpdateTaskResponse {
+    bool isUpdated = 1;
+    optional ITask task = 2;
+}
+ 
+message DeleteTaskRequest {
+    uint64 taskId = 1;
+    string authorLogin = 2;
+}
+ 
+message DeleteTaskResponse {
+    bool IsDeleted = 1;
+}
+ 
+message GetTaskRequest {
+    uint64 taskId = 1;
+    string authorLogin = 2;
+}
+ 
+message GetTaskResponse {
+    bool isAccessible = 1;
+    optional ITask task = 2;
+}
+ 
+message GetTasksListRequest {
+    string authorLogin = 1;
+    uint64 pageSize = 2;
+    uint64 page = 3;
+}
+ 
+message GetTasksListResponse {
+    repeated ITask tasks = 1;
+}
