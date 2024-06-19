@@ -28,7 +28,7 @@ paths:
         '403':
           description: Пользователь уже существует
   /login:
-    post:
+    get:
       summary: Аутентификация пользователя
       requestBody:
         required: true
@@ -50,9 +50,9 @@ paths:
               schema:
                 type: string
         '401':
-          description: Пользователя с таким логином не существует
-        '403':
           description: Неверный пароль к логину
+        '403':
+          description: Пользователя с таким логином не существует
   /update:
     post:
       security:
@@ -153,7 +153,7 @@ paths:
         '403':
           description: В запросе нет title или content
   /tasks/update:
-    post:
+    put:
       security:
         - AuthToken: []
       summary: Обновление задачи
@@ -202,7 +202,7 @@ paths:
         '405':
           description: Невалидный taskId
   /tasks/delete:
-    post:
+    delete:
       security:
         - AuthToken: []
       summary: Удаление задачи
@@ -227,7 +227,7 @@ paths:
         '405':
           description: Невалидный taskId
   /tasks/get:
-    post:
+    get:
       security:
         - AuthToken: []
       summary: Получить задачу
@@ -265,7 +265,7 @@ paths:
         '405':
           description: Невалидный taskId
   /tasks/get_page:
-    post:
+    get:
       security:
         - AuthToken: []
       summary: Получить страницу с задачами

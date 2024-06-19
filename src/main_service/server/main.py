@@ -44,7 +44,7 @@ def create_app(private, public, chanel, stub) -> Flask:
         requests.post(f'{MAIN_DB}/data/init', data=json.dumps({'login': login}))
         return make_response('Успешная регистрация\n', 200, {'Set-Cookie': f'jwt={get_cookie(login, private)}'})
 
-    @app.route('/login', methods=['POST'])
+    @app.route('/login', methods=['GET'])
     def login():
         body = json.loads(request.data)
         login = body['login']
@@ -52,16 +52,16 @@ def create_app(private, public, chanel, stub) -> Flask:
 
         response = requests.get(f'{MAIN_DB}/password', data=json.dumps({'login': login}))
         if response.status_code == 403:
-            return make_response('Пользователя с таким логином не существует\n', 401)
+            return make_response('Пользователя с таким логином не существует\n', 403)
         
         cur_password = response.text
         
         if not cur_password == get_hash(f'{login}{password}'):
-            return make_response('Неверный пароль к логину\n', 403)
+            return make_response('Неверный пароль к логину\n', 401)
 
         return make_response('Успешная авторизация\n', 200, {'Set-Cookie': f'jwt={get_cookie(login, private)}'})
     
-    @app.route('/update', methods=['POST'])
+    @app.route('/update', methods=['PUT'])
     def update():
         cookie = request.headers.get('Cookie', None)
         if not cookie:
@@ -106,7 +106,7 @@ def create_app(private, public, chanel, stub) -> Flask:
         task['status'] = status
         return make_response(f"Успешное создание задачи\n{task}\n", 200)
     
-    @app.route('/tasks/update', methods=['POST'])
+    @app.route('/tasks/update', methods=['PUT'])
     def tasks_update():
         cookie = request.headers.get('Cookie', None)
         if not cookie:
@@ -138,7 +138,7 @@ def create_app(private, public, chanel, stub) -> Flask:
         task['status'] = status
         return make_response(f"Успешное обновление задачи\n{task}\n", 200)
     
-    @app.route('/tasks/delete', methods=['POST'])
+    @app.route('/tasks/delete', methods=['DELETE'])
     def tasks_delete():
         cookie = request.headers.get('Cookie', None)
         if not cookie:
@@ -163,7 +163,7 @@ def create_app(private, public, chanel, stub) -> Flask:
         
         return make_response("Успешное удаление задачи\n", 200)
     
-    @app.route('/tasks/get', methods=['POST'])
+    @app.route('/tasks/get', methods=['GET'])
     def tasks_get():
         cookie = request.headers.get('Cookie', None)
         if not cookie:
@@ -192,7 +192,7 @@ def create_app(private, public, chanel, stub) -> Flask:
         task['status'] = status
         return make_response(f"Успешное получение задачи\n{task}\n", 200)
     
-    @app.route('/tasks/get_page', methods=['POST'])
+    @app.route('/tasks/get_page', methods=['GET'])
     def tasks_get_page():
         cookie = request.headers.get('Cookie', None)
         if not cookie:
