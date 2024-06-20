@@ -276,6 +276,8 @@ paths:
             schema:
               type: object
               properties:
+                authorLogin:
+                  type: string
                 pageSize:
                   type: integer
                 page:
@@ -302,6 +304,52 @@ paths:
           description: Невалидная кука
         '403':
           description: В запросе нет pageSize или page\
+  /statistics/send_view:
+    post:
+      security:
+        - AuthToken: []
+      summary: Отправить просмотр по задаче
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: integer
+      responses:
+        '200':
+          description: Запрос о просмотре успешно отправлен
+        '400': 
+          description: Нет куки
+        '401':
+          description: Невалидная кука
+        '403':
+          description: В запросе нет taskId
+  /statistics/send_like:
+    post:
+      security:
+        - AuthToken: []
+      summary: Поставить лайк на задачу
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: integer
+      responses:
+        '200':
+          description: Запрос о лайке успешно отправлен
+        '400': 
+          description: Нет куки
+        '401':
+          description: Невалидная кука
+        '403':
+          description: В запросе нет taskId
 components:
   securitySchemes:
     AuthToken:

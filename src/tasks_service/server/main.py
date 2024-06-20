@@ -64,14 +64,11 @@ class TaskServiceServer(TaskServiceServicer):
         authorLogin = request.authorLogin
 
         with conn.cursor() as cursor:
-            cursor.execute(queries.get_authorLogin(id))
-            real_login = cursor.fetchone()
-
-            if not real_login or not real_login[0] == authorLogin:
-                return GetTaskResponse(isAccessible=False)
-            
             cursor.execute(queries.select_task(id))
             task = cursor.fetchone()
+
+        if not task:
+            return GetTaskResponse(isAccessible=False)
 
         return GetTaskResponse(isAccessible=True, task=ITask(id=id, title=task[2], content=task[3], status=task[4]))
     

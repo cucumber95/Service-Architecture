@@ -17,6 +17,44 @@ services:
             POSTGRES_PASSWORD: megapassword52fortasksservice
         ports:
             - 5432:5432
+
+    zookeeper:
+        image: bitnami/zookeeper:latest
+        environment:
+            - ALLOW_ANONYMOUS_LOGIN=yes
+        ports:
+            - "2181:2181"
+
+    kafka:
+        image: bitnami/kafka:latest
+        ports:
+            - "9092:9092"
+        environment:
+            - KAFKA_BROKER_ID=1
+            - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+            - KAFKA_LISTENERS=PLAINTEXT://:9092
+            - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+            - ALLOW_PLAINTEXT_LISTENER=yes
+        depends_on:
+            - zookeeper
+
+    kafka-topics:
+        image: bitnami/kafka:latest
+        depends_on:
+            - kafka
+        entrypoint: [ '/bin/sh', '-c' ]
+        command: "kafka-topics.sh --create --topic likes_topic --bootstrap-server kafka:9092 --partitions 1 --replication-factor 1 && \
+        kafka-topics.sh --create --topic views_topic --bootstrap-server kafka:9092 --partitions 1 --replication-factor 1"
+
+    clickhouse:
+        image: yandex/clickhouse-server:latest
+        ports:
+            - 8123:8123
+            - 9000:9000
+        environment:
+            - CLICKHOUSE_DB=default
+        depends_on:
+            - kafka
  
     server:
         build: 
@@ -26,6 +64,8 @@ services:
             - 8090:8090
         depends_on:
             - database
+            - kafka
+        restart: on-failure:10
 
     tasks_server:
         build: 
@@ -34,4 +74,14 @@ services:
             - 5050:5050
         depends_on:
             - tasks_database
+
+    statistics_server:
+        build: 
+            context: statistics_service
+        ports:
+            - 8092:8092
+        depends_on:
+            - kafka
+            - clickhouse
+        restart: on-failure:10
 
