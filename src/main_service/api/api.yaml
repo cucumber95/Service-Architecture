@@ -90,22 +90,12 @@ paths:
               schema:
                 type: object
                 properties:
-                  firstName:
-                    type: string
                     nullable: true
-                  lastName:
-                    type: string
                     nullable: true
-                  birthDate:
-                    type: string
                     format: date
                     nullable: true
-                  mail:
-                    type: string
                     format: email
                     nullable: true
-                  phoneNumber:
-                    type: string
                     nullable: true
         '400': 
           description: Нет куки
@@ -140,12 +130,6 @@ paths:
                 properties:
                   id:
                     type: integer
-                  title:
-                    type: string
-                  content:
-                    type: string
-                  status:
-                    type: string
         '400': 
           description: Нет куки
         '401':
@@ -185,12 +169,6 @@ paths:
                 properties:
                   id:
                     type: integer
-                  title:
-                    type: string
-                  content:
-                    type: string
-                  status:
-                    type: string
         '400': 
           description: Нет куки
         '401':
@@ -250,19 +228,13 @@ paths:
                 properties:
                   id:
                     type: integer
-                  title:
-                    type: string
-                  content:
-                    type: string
-                  status:
-                    type: string
         '400': 
           description: Нет куки
         '401':
           description: Невалидная кука
         '403':
           description: В запросе нет taskId
-        '405':
+        '406':
           description: Невалидный taskId
   /tasks/get_page:
     get:
@@ -292,18 +264,14 @@ paths:
                 properties:
                   id:
                     type: integer
-                  title:
-                    type: string
-                  content:
-                    type: string
-                  status:
-                    type: string
         '400': 
           description: Нет куки
         '401':
           description: Невалидная кука
         '403':
-          description: В запросе нет pageSize или page\
+          description: В запросе нет pageSize или page
+        '406':
+          description: pageSize должно быть положительным числом
   /statistics/send_view:
     post:
       security:
@@ -350,6 +318,95 @@ paths:
           description: Невалидная кука
         '403':
           description: В запросе нет taskId
+  /statistics/get_stats:
+    get:
+      security:
+        - AuthToken: []
+      summary: Получить статистику по задаче
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: integer
+      responses:
+        '200':
+          description: Успешное получение задачи
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  taskId:
+                    type: integer
+                  likes:
+                    type: integer
+                  views:
+                    type: integer
+        '400': 
+          description: Нет куки
+        '401':
+          description: Невалидная кука
+        '403':
+          description: В запросе нет taskId
+        '406':
+          description: Невалидный taskId
+  /statistics/get_top_tasks:
+    get:
+      security:
+        - AuthToken: []
+      summary: Получить топ задач
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: boolean
+      responses:
+        '200':
+          description: Успешное получение топа задач
+          content:
+            application/json:
+              schema:
+                type: array
+                properties:
+                  taskId:
+                    type: integer
+                  count:
+                    type: integer
+        '400': 
+          description: Нет куки
+        '401':
+          description: Невалидная кука
+        '403':
+          description: В запросе нет taskId
+  /statistics/get_top_users:
+    get:
+      security:
+        - AuthToken: []
+      summary: Получить топ пользователей
+      responses:
+        '200':
+          description: Успешное получение топа пользователей
+          content:
+            application/json:
+              schema:
+                type: array
+                properties:
+                  login:
+                    type: integer
+                  likes:
+                    type: integer
+        '400': 
+          description: Нет куки
+        '401':
+          description: Невалидная кука
 components:
   securitySchemes:
     AuthToken:

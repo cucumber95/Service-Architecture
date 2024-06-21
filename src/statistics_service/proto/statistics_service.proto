@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+service StatisticsService {
+    rpc GetStats (GetStatsRequest) returns (GetStatsResponce) {}
+    rpc GetTopTasks (GetTopTasksRequest) returns (GetTopTasksResponce) {}
+    rpc GetTopUsers (GetTopUsersRequest) returns (GetTopUsersResponce) {}
+}
+
+message GetStatsRequest {
+    uint64 taskId = 1;
+}
+
+message GetStatsResponce {
+    uint64 likes = 1;
+    uint64 views = 2;
+}
+
+enum Type {
+    LIKES = 0;
+    VIEWS = 1;
+}
+
+message GetTopTasksRequest {
+    Type type = 1;
+    repeated uint64 taskId = 2;
+}
+
+message TaskStats {
+    uint64 taskId = 1;
+    uint64 count = 2;
+}
+
+message GetTopTasksResponce {
+    repeated TaskStats tasks = 1;
+}
+
+message UserTasks {
+    string login = 1;
+    repeated uint64 taskId = 2;
+}
+
+message GetTopUsersRequest {
+    repeated UserTasks users = 1;
+}
+
+message UserStats {
+    string login = 1;
+    uint64 likes = 2;
+}
+
+message GetTopUsersResponce {
+    repeated UserStats users = 1;
+}

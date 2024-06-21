@@ -8,5 +8,6 @@ COPY /main_service/server/main.py .
 COPY /main_service/server/kafka_producer.py .
 COPY main_service/server/auth/ auth/
 COPY tasks_service/proto/ tasks_service/proto/
+COPY statistics_service/proto/ statistics_service/proto/
 
 ENTRYPOINT ["python", "-m", "main"]
