@@ -84,3 +84,14 @@ curl -v -X GET 'localhost:8092'
 Hello from statistics service!
 * Closing connection 0
 ```
+
+Grpc - запросы:
+```
+curl -v -X GET -H 'Content-type: application/json' -H 'Cookie: jwt=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Im1ha3Nvbjk1cHJvMTAwZ2FtZXIifQ.jVFuZee6SJL3L8DikJ5-x5koJww2Pb9d21a-OSa_NlzXrE-woAPm7MLJjvM8FRCgV5HcnJ7IlzK5OlqZ1E4N5r3rv4UoDYuZbFMZVefHVFmGYNOmz-ZlD06HzDA08zWIcVnSx5sMcvgWBvkjtwlhPJBsx-VXW32j1wfPWKANHkzQ3f3SyFitxJ-hJNZ6sCeN_BMIlwvmXLXC8uWFn_0rr8ih5aCCdlcUCp__vrVgqy6L4lXzcoHDuOzdPNkhVd5td4H7y2XWjp-iHFOTx8bKktRBjyFla2kIgvkSxfHFn-hhCNlFcBmKxf5qMC6zISUxt_u5pUWnb0EhUjOzZ-O5Uw' -d '{"taskId": 1}' 'localhost:8090/statistics/get_stats'
+```
+```
+curl -v -X GET -H 'Content-type: application/json' -H 'Cookie: jwt=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Im1ha3Nvbjk1cHJvMTAwZ2FtZXIifQ.jVFuZee6SJL3L8DikJ5-x5koJww2Pb9d21a-OSa_NlzXrE-woAPm7MLJjvM8FRCgV5HcnJ7IlzK5OlqZ1E4N5r3rv4UoDYuZbFMZVefHVFmGYNOmz-ZlD06HzDA08zWIcVnSx5sMcvgWBvkjtwlhPJBsx-VXW32j1wfPWKANHkzQ3f3SyFitxJ-hJNZ6sCeN_BMIlwvmXLXC8uWFn_0rr8ih5aCCdlcUCp__vrVgqy6L4lXzcoHDuOzdPNkhVd5td4H7y2XWjp-iHFOTx8bKktRBjyFla2kIgvkSxfHFn-hhCNlFcBmKxf5qMC6zISUxt_u5pUWnb0EhUjOzZ-O5Uw' -d '{"type": "LIKES"}' 'localhost:8090/statistics/get_top_tasks'
+```
+```
+curl -v -X GET -H 'Content-type: application/json' -H 'Cookie: jwt=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Im1ha3Nvbjk1cHJvMTAwZ2FtZXIifQ.jVFuZee6SJL3L8DikJ5-x5koJww2Pb9d21a-OSa_NlzXrE-woAPm7MLJjvM8FRCgV5HcnJ7IlzK5OlqZ1E4N5r3rv4UoDYuZbFMZVefHVFmGYNOmz-ZlD06HzDA08zWIcVnSx5sMcvgWBvkjtwlhPJBsx-VXW32j1wfPWKANHkzQ3f3SyFitxJ-hJNZ6sCeN_BMIlwvmXLXC8uWFn_0rr8ih5aCCdlcUCp__vrVgqy6L4lXzcoHDuOzdPNkhVd5td4H7y2XWjp-iHFOTx8bKktRBjyFla2kIgvkSxfHFn-hhCNlFcBmKxf5qMC6zISUxt_u5pUWnb0EhUjOzZ-O5Uw' 'localhost:8090/statistics/get_top_users'
+```
