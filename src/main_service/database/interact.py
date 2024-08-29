@@ -28,7 +28,10 @@ def update_row(connection, table_name, key_name, key, column, value):
 def get_row(connection, table_name, key_name, key):
     query = f"SELECT * FROM {table_name} WHERE {key_name} = {key}"
     return execute_read_query(connection, query)
-    
+
+def get_logins(connection):
+    query = "SELECT login FROM passwords"
+    return execute_read_query(connection, query)
     
 def create_connection():
     return sqlite3.connect("database.db", check_same_thread=False)

@@ -38,7 +38,7 @@ services:
         depends_on:
             - zookeeper
 
-    kafka-topics:
+    kafka_topics:
         image: bitnami/kafka:latest
         depends_on:
             - kafka
@@ -71,17 +71,20 @@ services:
         build: 
             context: tasks_service
         ports:
-            - 5050:5050
+            - 5051:5050
         depends_on:
             - tasks_database
 
     statistics_server:
         build: 
-            context: statistics_service
+            context: .
+            dockerfile: statistics_service/Dockerfile
         ports:
             - 8092:8092
+            - 5050:5050
         depends_on:
             - kafka
             - clickhouse
+            - kafka_topics
         restart: on-failure:10
 

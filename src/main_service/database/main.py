@@ -49,6 +49,12 @@ def create_app(connection) -> Flask:
 
         interact.insert_empty_row(connection, "users_data", "login", f'"{login}"')
         return make_response('', 200)
+    
+    @app.route('/logins', methods=['GET'])
+    def logins():
+        logins = interact.get_logins(connection)
+        logins_list = [l[0] for l in logins]
+        return make_response(json.dumps(logins_list), 200)
 
     return app
     

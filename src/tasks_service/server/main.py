@@ -83,6 +83,9 @@ class TaskServiceServer(TaskServiceServicer):
 
             tasks = [ITask(id=task[0], title=task[2], content=task[3], status=task[4]) for task in tasks]
 
+        if pageSize == 0:
+            return GetTasksListResponse(tasks=tasks)
+        
         if len(tasks) >= pageSize * page:
             return GetTasksListResponse(tasks=tasks[pageSize * (page - 1):pageSize * page])
         elif len(tasks) >= pageSize * (page - 1):
@@ -106,7 +109,7 @@ def main():
 
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=100))
     add_TaskServiceServicer_to_server(TaskServiceServer(), server)
-    server.add_insecure_port('0.0.0.0:5050')
+    server.add_insecure_port('0.0.0.0:5051')
     server.start()
     server.wait_for_termination(timeout=None)
 
