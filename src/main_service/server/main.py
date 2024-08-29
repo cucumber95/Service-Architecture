@@ -8,6 +8,7 @@ import grpc
 from google.protobuf import json_format 
 from tasks_service.proto.tasks_service_pb2 import CreateTaskRequest, UpdateTaskRequest, DeleteTaskRequest, GetTaskRequest, GetTasksListRequest, Statuses
 from tasks_service.proto import tasks_service_pb2_grpc
+from kafka_producer import sendView, sendLike
 
 
 MAIN_DB = 'http://database:8091'
@@ -207,12 +208,13 @@ def create_app(private, public, chanel, stub) -> Flask:
         
         body = json.loads(request.data)
         try:
+            authorLogin = body['authorLogin']
             pageSize = body['pageSize']
             page = body['page']
         except:
-            return make_response('В запросе нет pageSize или page\n', 403)
+            return make_response('В запросе нет authorLogin, pageSize или page\n', 403)
         
-        tasks = stub.GetTasksList(GetTasksListRequest(authorLogin=login, pageSize=pageSize, page=page))
+        tasks = stub.GetTasksList(GetTasksListRequest(authorLogin=authorLogin, pageSize=pageSize, page=page))
         tasks_result = list()
 
         for task in tasks.tasks:
@@ -222,6 +224,50 @@ def create_app(private, public, chanel, stub) -> Flask:
             tasks_result.append(task_result)
 
         return make_response(f"Успешное получение страницы с задачами\n{tasks_result}\n", 200)
+    
+    @app.route('/statistics/send_view', methods=['POST'])
+    def statistics_send_view():
+        cookie = request.headers.get('Cookie', None)
+        if not cookie:
+            return make_response('Нет куки\n', 400)
+        
+        cookie = cookie[4:]
+        try:
+            result = decode_cookie(cookie, public)
+            login = result['login']
+        except:
+            return make_response('Невалидная кука\n', 401)
+
+        body = json.loads(request.data)
+        try:
+            taskId = body['taskId']
+        except:
+            return make_response('В запросе нет taskId\n', 403)
+
+        sendView(taskId)
+        return make_response("Запрос о просмотре успешно отправлен\n", 200)
+    
+    @app.route('/statistics/send_like', methods=['POST'])
+    def statistics_send_like():
+        cookie = request.headers.get('Cookie', None)
+        if not cookie:
+            return make_response('Нет куки\n', 400)
+        
+        cookie = cookie[4:]
+        try:
+            result = decode_cookie(cookie, public)
+            login = result['login']
+        except:
+            return make_response('Невалидная кука\n', 401)
+
+        body = json.loads(request.data)
+        try:
+            taskId = body['taskId']
+        except:
+            return make_response('В запросе нет taskId\n', 403)
+
+        sendLike(taskId)
+        return make_response("Запрос о лайке успешно отправлен\n", 200)
             
     return app
 
