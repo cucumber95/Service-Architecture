@@ -28,7 +28,7 @@ paths:
         '403':
           description: Пользователь уже существует
   /login:
-    post:
+    get:
       summary: Аутентификация пользователя
       requestBody:
         required: true
@@ -50,9 +50,9 @@ paths:
               schema:
                 type: string
         '401':
-          description: Пользователя с таким логином не существует
-        '403':
           description: Неверный пароль к логину
+        '403':
+          description: Пользователя с таким логином не существует
   /update:
     post:
       security:
@@ -81,8 +81,7 @@ paths:
                   nullable: true
                 phoneNumber:
                   type: string
-                  nullable: true
-                  
+                  nullable: true        
       responses:
         '200':
           description: Успешное обновление данных пользователя
@@ -108,10 +107,201 @@ paths:
                   phoneNumber:
                     type: string
                     nullable: true
-        '401': 
+        '400': 
           description: Нет куки
-        '400':
+        '401':
           description: Невалидная кука
+  /tasks/create:
+    post:
+      security:
+        - AuthToken: []
+      summary: Создание задачи
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                status:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Успешное создание задачи
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  status:
+                    type: string
+        '400': 
+          description: Нет куки
+        '401':
+          description: Невалидная кука
+        '403':
+          description: В запросе нет title или content
+  /tasks/update:
+    put:
+      security:
+        - AuthToken: []
+      summary: Обновление задачи
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: integer
+                title:
+                  type: string
+                  nullable: true
+                content:
+                  type: string
+                  nullable: true
+                status:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Успешное обновление задачи
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  status:
+                    type: string
+        '400': 
+          description: Нет куки
+        '401':
+          description: Невалидная кука
+        '403':
+          description: В запросе нет taskId
+        '404':
+          description: Невалидный запрос
+        '405':
+          description: Невалидный taskId
+  /tasks/delete:
+    delete:
+      security:
+        - AuthToken: []
+      summary: Удаление задачи
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: integer
+      responses:
+        '200':
+          description: Успешное удаление задачи
+        '400': 
+          description: Нет куки
+        '401':
+          description: Невалидная кука
+        '403':
+          description: В запросе нет taskId
+        '405':
+          description: Невалидный taskId
+  /tasks/get:
+    get:
+      security:
+        - AuthToken: []
+      summary: Получить задачу
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: integer
+      responses:
+        '200':
+          description: Успешное получение задачи
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  status:
+                    type: string
+        '400': 
+          description: Нет куки
+        '401':
+          description: Невалидная кука
+        '403':
+          description: В запросе нет taskId
+        '405':
+          description: Невалидный taskId
+  /tasks/get_page:
+    get:
+      security:
+        - AuthToken: []
+      summary: Получить страницу с задачами
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pageSize:
+                  type: integer
+                page:
+                  type: integer
+      responses:
+        '200':
+          description: Успешное получение страницы с задачами
+          content:
+            application/json:
+              schema:
+                type: array
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  status:
+                    type: string
+        '400': 
+          description: Нет куки
+        '401':
+          description: Невалидная кука
+        '403':
+          description: В запросе нет pageSize или page\
 components:
   securitySchemes:
     AuthToken:
